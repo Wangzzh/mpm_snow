@@ -2,25 +2,28 @@
 #include <iostream>
 
 #include "GL/gl.h"
-#include "GL/freeglut.h"
+#include "GL/glut.h"
 
 #include "particle.hpp"
 #include "grid.hpp"
 #include "mpm.hpp"
 
+MPM* mpm;
+
 void display() {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    // Render particles
     glColor3f(1, 0, 0);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(0, 0, 0);
-        glVertex3f(1, 0, 0);
-        glVertex3f(0.5, 0.5, 0);
-    glEnd();
+    mpm->render();
+
     glFlush();
 }
 
 int main(int argc, char* argv[]) {
+    mpm = new MPM();
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(600, 600);
