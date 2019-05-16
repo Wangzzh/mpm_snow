@@ -9,18 +9,29 @@
 #include "particle.hpp"
 #include "grid.hpp"
 
+class MaterialParameters 
+{
+public:
+    MaterialParameters() {}
+    MaterialParameters(double youngsModulus, double poissonsRatio, 
+        double hardening, double criticalCompression, double criticalStretch);
+    double E, nu, xsi, thetaC, thetaS, lambda, mu;
+};
+
 class MPM
 {
 public:
-    MPM(int nGrid, double timeStep);
+    MPM(int nGrid, double timeStep, MaterialParameters material);
     ~MPM();
     void render();
     void step();
 
 private:
     std::vector<double> calculateWeights(double distToLeft);
+    
     void particleToGrid();
     void computeParticleDensity();
+    void computeGridForce();
 
     double timeStep;
     double time;
@@ -28,4 +39,6 @@ private:
     int nGrid;
     std::vector<Particle*> particles;
     std::vector<std::vector<Grid*>> grids;
+    
+    MaterialParameters material;
 };

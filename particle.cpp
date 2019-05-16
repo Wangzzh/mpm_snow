@@ -15,3 +15,30 @@ void Particle::render() {
         position[1] + velocity[1] * velocityFactor, 0.);
     glEnd();
 }
+
+void Particle::calculateWeights() {
+    xWeight.clear(); yWeight.clear();
+    xWeightGradient.clear(); yWeightGradient.clear();
+
+    double x = xDiff;
+    xWeight.push_back(-(1+x) * (1+x) * (1+x) / 6. + (1+x) * (1+x) - 2 * (1+x) + 4./3.);
+    xWeight.push_back(0.5 * x * x * x - x * x + 2./3.);
+    xWeight.push_back(0.5 * (1-x) * (1-x) * (1-x) - (1-x) * (1-x) + 2./3.);
+    xWeight.push_back(-(2-x) * (2-x) * (2-x) / 6. + (2-x) * (2-x) - 2 * (2-x) + 4./3.);
+    
+    xWeightGradient.push_back(-(1+x) * (1+x) / 2. + 2 * (1+x) - 2);
+    xWeightGradient.push_back(1.5 * x * x - 2 * x + 2./3.);
+    xWeightGradient.push_back(-1.5 * (1-x) * (1-x) + 2 * (1-x) + 2./3.);
+    xWeightGradient.push_back((2-x) * (2-x) / 3. - 2 * (2-x) + 2);
+    
+    x = yDiff;
+    yWeight.push_back(-(1+x) * (1+x) * (1+x) / 6. + (1+x) * (1+x) - 2 * (1+x) + 4./3.);
+    yWeight.push_back(0.5 * x * x * x - x * x + 2./3.);
+    yWeight.push_back(0.5 * (1-x) * (1-x) * (1-x) - (1-x) * (1-x) + 2./3.);
+    yWeight.push_back(-(2-x) * (2-x) * (2-x) / 6. + (2-x) * (2-x) - 2 * (2-x) + 4./3.);
+    
+    yWeightGradient.push_back(-(1+x) * (1+x) / 2. + 2 * (1+x) - 2);
+    yWeightGradient.push_back(1.5 * x * x - 2 * x + 2./3.);
+    yWeightGradient.push_back(-1.5 * (1-x) * (1-x) + 2 * (1-x) + 2./3.);
+    yWeightGradient.push_back((2-x) * (2-x) / 3. - 2 * (2-x) + 2);
+}

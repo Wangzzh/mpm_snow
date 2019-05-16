@@ -9,6 +9,7 @@
 #include "mpm.hpp"
 
 MPM* mpm;
+
 int n = 10;
 double dTime = 0.1;
 
@@ -29,7 +30,8 @@ void display() {
 }
 
 int main(int argc, char* argv[]) {
-    mpm = new MPM(n, dTime);
+    MaterialParameters material = MaterialParameters(140000, 0.2, 10, 0.025, 0.0075);
+    mpm = new MPM(n, dTime, material);
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);

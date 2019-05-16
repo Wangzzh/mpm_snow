@@ -18,9 +18,15 @@ public:
 
     Eigen::Vector2d position;
     Eigen::Vector2d velocity;
+    
+    Eigen::Matrix2d FE = Eigen::Matrix2d::Identity();
+    Eigen::Matrix2d FP = Eigen::Matrix2d::Identity();
 
     // intermediate results
     int xLeft, yLeft;
     double xDiff, yDiff;
     std::vector<double> xWeight, yWeight;
+    std::vector<double> xWeightGradient, yWeightGradient;
+
+    void calculateWeights();
 };

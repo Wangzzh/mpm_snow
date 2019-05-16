@@ -11,6 +11,10 @@ public:
 
     Eigen::Vector2d position;
 
+    // Intermediate
     double mass;
     Eigen::Vector2d linearMomentum;
+
+    Eigen::Vector2d force;
+    Eigen::Vector2d newPosition;
 };
