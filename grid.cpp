@@ -8,10 +8,10 @@ void Grid::render() {
     glutSolidSphere(0.005, 10, 10);
     glPopMatrix();
     
-    double velocityFactor = 0.1;
+    double velocityFactor = 0.5;
     glBegin(GL_LINES);
     glVertex3f(position[0], position[1], 0.0);
-    glVertex3f(position[0] + velocity[0] * velocityFactor, 
-        position[1] + velocity[1] * velocityFactor, 0.);
+    glVertex3f(position[0] + linearMomentum[0] * velocityFactor, 
+        position[1] + linearMomentum[1] * velocityFactor, 0.);
     glEnd();
 }

@@ -12,5 +12,5 @@ public:
     Eigen::Vector2d position;
 
     double mass;
-    Eigen::Vector2d velocity;
+    Eigen::Vector2d linearMomentum;
 };

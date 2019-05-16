@@ -11,12 +11,17 @@
 MPM* mpm;
 int n = 10;
 
+bool first = true;
+
 void display() {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Render particles
-    glColor3f(1, 0, 0);
+    if (first) {
+        mpm -> step();
+        first = false;
+    }
+    
     mpm->render();
 
     glFlush();

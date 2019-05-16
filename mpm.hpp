@@ -15,8 +15,13 @@ public:
     MPM(int nGrid);
     ~MPM();
     void render();
+    void step();
 
 private:
+    std::vector<double> calculateWeights(double distToLeft);
+    void particleToGrid();
+
+    int nGrid;
     std::vector<Particle*> particles;
     std::vector<std::vector<Grid*>> grids;
 };
