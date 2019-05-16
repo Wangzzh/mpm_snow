@@ -5,6 +5,13 @@ void Particle::render() {
     glPushMatrix();
     glLoadIdentity();
     glTranslatef(position[0], position[1], 0.);
-    glutSolidSphere(0.1, 10, 10);
+    glutSolidSphere(0.01, 10, 10);
     glPopMatrix();
+
+    double velocityFactor = 0.1;
+    glBegin(GL_LINES);
+    glVertex3f(position[0], position[1], 0.0);
+    glVertex3f(position[0] + velocity[0] * velocityFactor, 
+        position[1] + velocity[1] * velocityFactor, 0.);
+    glEnd();
 }

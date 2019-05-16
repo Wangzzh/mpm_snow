@@ -12,7 +12,7 @@
 class MPM
 {
 public:
-    MPM();
+    MPM(int nGrid);
     ~MPM();
     void render();
 

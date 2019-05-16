@@ -7,6 +7,10 @@
 class Grid
 {
 public:
+    void render();
+
+    Eigen::Vector2d position;
+
     double mass;
     Eigen::Vector2d velocity;
 };
