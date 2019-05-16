@@ -1,7 +1,9 @@
 #include "mpm.hpp"
 
-MPM::MPM(int nGrid) {
+MPM::MPM(int nGrid, double timeStep) {
     this->nGrid = nGrid;
+    this->time = 0;
+    this->timeStep = timeStep;
 
     Particle* p1 = new Particle();
     p1 -> mass = 1;
@@ -44,6 +46,9 @@ MPM::~MPM() {
 
 void MPM::step() {
     particleToGrid();
+    if (time == 0.) computeParticleDensity();
+
+    time += timeStep;
 }
 
 void MPM::render() {
@@ -79,21 +84,42 @@ void MPM::particleToGrid() {
         }
     }
     for (auto& particle : particles) {
-        int xLeft = (int) (particle->position[0] * nGrid - 0.5);
-        int yLeft = (int) (particle->position[1] * nGrid - 0.5);
-        double xDiff = (particle->position[0] * nGrid) - xLeft - 0.5;
-        double yDiff = (particle->position[1] * nGrid) - yLeft - 0.5;
+        particle->xLeft = (int) (particle->position[0] * nGrid - 0.5);
+        particle->yLeft = (int) (particle->position[1] * nGrid - 0.5);
+        particle->xDiff = (particle->position[0] * nGrid) - particle->xLeft - 0.5;
+        particle->yDiff = (particle->position[1] * nGrid) - particle->yLeft - 0.5;
 
-        std::vector<double> xWeight = calculateWeights(xDiff);
-        std::vector<double> yWeight = calculateWeights(yDiff);
+        particle->xWeight = calculateWeights(particle->xDiff);
+        particle->yWeight = calculateWeights(particle->yDiff);
         
         for (int dx = -1; dx <= 2; dx++) {
             for (int dy = -1; dy <= 2; dy++) {
-                if (xLeft + dx >= 0 && xLeft + dx < nGrid && yLeft + dy >= 0 && yLeft + dy < nGrid) {
-                    grids[xLeft + dx][yLeft + dy] -> mass += xWeight[dx+1] * yWeight[dy+1] * particle->mass;
-                    grids[xLeft + dx][yLeft + dy] -> linearMomentum += xWeight[dx+1] * yWeight[dy+1] * particle->mass * particle-> velocity;
+                if (particle->xLeft + dx >= 0 && particle->xLeft + dx < nGrid 
+                        && particle->yLeft + dy >= 0 && particle->yLeft + dy < nGrid) {
+                    grids[particle->xLeft + dx][particle->yLeft + dy] -> mass += 
+                        particle->xWeight[dx+1] * particle->yWeight[dy+1] * particle->mass;
+                    grids[particle->xLeft + dx][particle->yLeft + dy] -> linearMomentum += 
+                        particle->xWeight[dx+1] * particle->yWeight[dy+1] * particle->mass * particle-> velocity;
                 }
             }
         }
+    }
+}
+
+void MPM::computeParticleDensity() {
+    for (auto& particle : particles) {        
+        particle->density = 0;
+        for (int dx = -1; dx <= 2; dx++) {
+            for (int dy = -1; dy <= 2; dy++) {
+                if (particle->xLeft + dx >= 0 && particle->xLeft + dx < nGrid 
+                        && particle->yLeft + dy >= 0 && particle->yLeft + dy < nGrid) {
+                    particle->density += grids[particle->xLeft + dx][particle->yLeft + dy] -> mass * 
+                        particle->xWeight[dx+1] * particle->yWeight[dy+1] * nGrid * nGrid;
+                }
+            }
+        }
+        particle->volume = particle->mass / particle->density;
+        std::cout << "r " << particle->density << std::endl;
+        std::cout << "v " << particle->volume << std::endl;
     }
 }

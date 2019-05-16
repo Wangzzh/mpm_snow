@@ -12,7 +12,7 @@
 class MPM
 {
 public:
-    MPM(int nGrid);
+    MPM(int nGrid, double timeStep);
     ~MPM();
     void render();
     void step();
@@ -20,6 +20,10 @@ public:
 private:
     std::vector<double> calculateWeights(double distToLeft);
     void particleToGrid();
+    void computeParticleDensity();
+
+    double timeStep;
+    double time;
 
     int nGrid;
     std::vector<Particle*> particles;

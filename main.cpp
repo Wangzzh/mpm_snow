@@ -10,6 +10,7 @@
 
 MPM* mpm;
 int n = 10;
+double dTime = 0.1;
 
 bool first = true;
 
@@ -28,7 +29,7 @@ void display() {
 }
 
 int main(int argc, char* argv[]) {
-    mpm = new MPM(n);
+    mpm = new MPM(n, dTime);
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
