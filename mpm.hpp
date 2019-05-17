@@ -1,6 +1,9 @@
 #pragma once
 
+#include <cstdlib>
 #include <cmath>
+#include <ctime>
+#include <random>
 #include <vector>
 
 #include "Eigen/Dense"
@@ -34,6 +37,11 @@ private:
     void particleToGrid();
     void computeParticleDensity();
     void computeGridForce();
+    void computeGridVelocity();
+    void updateDeformation();
+    void updateParticleVelocity();
+    void handleParticleCollision();
+    void updateParticlePosition();
 
     double timeStep;
     double time;

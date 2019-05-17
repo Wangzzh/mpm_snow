@@ -10,23 +10,30 @@
 
 MPM* mpm;
 
-int n = 10;
-double dTime = 0.1;
-
-bool first = true;
+int n = 100;
+double dTime = 0.01;
 
 void display() {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    if (first) {
-        mpm -> step();
-        first = false;
-    }
-    
+    // mpm->step();
     mpm->render();
+    // std::cout << "step" << std::endl;
 
     glFlush();
+}
+
+void keyboard(unsigned char key, int x, int y) {
+    if (key == ' ' ) {
+        std::cout << "Step" << std::endl;
+        mpm -> step();
+        // mpm -> render();
+    }
+}
+
+void idle() {
+    glutPostRedisplay();
 }
 
 int main(int argc, char* argv[]) {
@@ -39,6 +46,8 @@ int main(int argc, char* argv[]) {
     glutInitWindowPosition(100, 100);
     glutCreateWindow("MPM Snow Simulation");
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+    glutIdleFunc(idle);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
