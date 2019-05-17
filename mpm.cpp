@@ -144,7 +144,8 @@ void MPM::computeGridForce() {
         }
     }
     for (auto& particle : particles) {   
-        
+        std::cout << "--------------------------------------------" << std::endl;
+
         // Calculate FEHat
         Eigen::Matrix2d FEHat = particle->FE;
         for (int dx = -1; dx <= 2; dx++) {
@@ -166,9 +167,36 @@ void MPM::computeGridForce() {
                 int xGrid = particle->xLeft + dx;
                 int yGrid = particle->yLeft + dy;
                 if (xGrid >= 0 && xGrid < nGrid && yGrid >= 0 && yGrid < nGrid) {
+                    double JE = particle->FE.determinant();
+                    double JP = particle->FP.determinant();
+                    double lambda = material.lambda * exp(material.xsi * (1 - JP));
+                    double mu = material.mu * exp(material.xsi * (1 - JP));
+                    std::cout << "JE: " << JE << std::endl;
+                    std::cout << "JP: " << JP << std::endl;
+                    std::cout << "lambda: " << lambda << std::endl;
+                    std::cout << "mu: " << mu << std::endl;
+
+                    Eigen::JacobiSVD<Eigen::MatrixXd> svd(particle->FE, Eigen::ComputeThinU | Eigen::ComputeThinV);
+                    Eigen::Matrix2d U = svd.matrixU();
+                    Eigen::Matrix2d V = svd.matrixV();
+                    Eigen::Matrix2d RE = U * V.transpose();
+                    Eigen::Matrix2d S = U.inverse() * particle->FE * V.transpose().inverse();
+                    std::cout << "U" << std::endl << U << std::endl;
+                    std::cout << "V" << std::endl << V << std::endl;
+                    std::cout << "S" << std::endl << S << std::endl;
+                    std::cout << "R" << std::endl << RE << std::endl;
+
+                    Eigen::Matrix2d dPdF = 2 * mu * (particle->FE - RE) + lambda * (JE - 1) * JE * particle->FE.transpose().inverse();
                     Eigen::Matrix2d sigma;
-                    Eigen::Vector2d dWeight;
-                    grids[xGrid][yGrid] -> force -= particle->volume * sigma * dWeight;
+                    sigma = 1. / JP * dPdF * particle->FE.transpose();
+                    std::cout << "dpdf" << std::endl << dPdF << std::endl;
+                    std::cout << "sigma" << std::endl << sigma << std::endl;
+
+
+                    Eigen::Vector2d weightGradient;
+                    weightGradient << particle->xWeightGradient[dx+1] * particle->yWeight[dy+1], 
+                                      particle->yWeightGradient[dy+1] * particle->xWeight[dx+1];
+                    grids[xGrid][yGrid] -> force -= particle->volume * sigma * weightGradient;
                 }
             }
         }

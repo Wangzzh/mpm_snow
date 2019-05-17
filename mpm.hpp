@@ -1,8 +1,10 @@
 #pragma once
 
+#include <cmath>
 #include <vector>
 
 #include "Eigen/Dense"
+#include "Eigen/SVD"
 #include "GL/gl.h"
 #include "GL/glut.h"
 
