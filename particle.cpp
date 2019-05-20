@@ -5,7 +5,7 @@ void Particle::render() {
     glPushMatrix();
     glLoadIdentity();
     glTranslatef(position[0], position[1], 0.);
-    glutSolidSphere(0.005, 10, 10);
+    glutSolidSphere(0.002, 10, 10);
     glPopMatrix();
 
     // double velocityFactor = 0.1;

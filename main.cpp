@@ -10,14 +10,15 @@
 
 MPM* mpm;
 
-int n = 100;
-double dTime = 0.01;
+bool simulate = false;
+
+int n = 30;
+double dTime = 0.004;
 
 void display() {
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // mpm->step();
     mpm->render();
     // std::cout << "step" << std::endl;
 
@@ -25,14 +26,21 @@ void display() {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    if (key == ' ' ) {
+    if (key == 'g'  && !simulate) {
         std::cout << "Step" << std::endl;
         mpm -> step();
         // mpm -> render();
     }
+    if (key == ' ') {
+        simulate = !simulate;
+    }
 }
 
 void idle() {
+    if (simulate) {
+        std::cout << "Auto step" << std::endl;
+        mpm->step();
+    }
     glutPostRedisplay();
 }
 
